@@ -45,13 +45,19 @@ var createNoteHTML = () => {
   `;
 };
 
-// Notes functionality
-var notesTab = () => {
-  const notesTabHTML = document.createElement("div");
-  notesTabHTML.innerHTML = createNoteHTML();
+// Update notes list
+var updateNotesList = () => {
+  const notesContainer = document.querySelector(".notes-container");
+  if (notesContainer) {
+    notesContainer.innerHTML = createNoteHTML();
+    addNotesEventListeners();
+  }
+};
 
-  const addNoteBtn = notesTabHTML.querySelector("#add-note-btn");
-  const noteInput = notesTabHTML.querySelector("#note-input");
+// Add event listeners to notes buttons
+var addNotesEventListeners = () => {
+  const addNoteBtn = document.querySelector("#add-note-btn");
+  const noteInput = document.querySelector("#note-input");
 
   addNoteBtn.addEventListener("click", () => {
     const noteText = noteInput.value.trim();
@@ -60,21 +66,27 @@ var notesTab = () => {
       notes.push(noteText);
       setNoteSetting("notes", notes);
       noteInput.value = "";
-      location.reload();
+      updateNotesList();
     }
   });
 
-  const deleteNoteBtns = notesTabHTML.querySelectorAll(".delete-note-btn");
+  const deleteNoteBtns = document.querySelectorAll(".delete-note-btn");
   deleteNoteBtns.forEach((deleteBtn) => {
     deleteBtn.addEventListener("click", () => {
       const index = deleteBtn.getAttribute("data-index");
       const notes = getNoteSetting("notes");
       notes.splice(index, 1);
       setNoteSetting("notes", notes);
-      location.reload();
+      updateNotesList();
     });
   });
+};
 
+// Notes functionality
+var notesTab = () => {
+  const notesTabHTML = document.createElement("div");
+  notesTabHTML.innerHTML = createNoteHTML();
+  addNotesEventListeners();
   return notesTabHTML;
 };
 
